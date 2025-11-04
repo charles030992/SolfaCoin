@@ -1,0 +1,20 @@
+{
+  "name": "solfachuzas",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy-minimal": "hardhat run scripts/deploy_minimal.js --network sepolia",
+    "deploy-oz": "hardhat run scripts/deploy_oz.js --network sepolia"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
+    "ethers": "^6.9.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "dotenv": "^17.2.3",
+    "hardhat": "^2.26.5"
+  }
+}
