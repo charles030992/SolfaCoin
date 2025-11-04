@@ -52,5 +52,6 @@ npm run deploy-oz
 - `scripts/deploy_minimal.js` - despliegue de la pista A.
 - `scripts/deploy_oz.js` - despliegue de la pista B.
 - `hardhat.config.js` - configuración de Hardhat (red Sepolia desde `.env`).
+- el usuario debe crear .env a partir de .env.example.
 
 
