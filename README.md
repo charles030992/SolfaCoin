@@ -1,56 +1,114 @@
-# Solfachuzas Token (proyecto educativo)
 
-Proyecto educativo con dos "pistas" para crear un token ERC-20 para el equipo "los solfachuzas":
+# SolfaCoin — guía rápida para desplegar un ERC‑20 en Sepolia (para VS Code)
 
-- Pista A (curso/minimal): Token sencillo desde cero (`contracts/MinimalToken.sol`).
-- Pista B (producción/OZ): Token basado en OpenZeppelin (`contracts/OZToken.sol`).
+Este repositorio es un proyecto educativo con dos variantes de token ERC‑20:
 
-Objetivo: que puedas compilar, desplegar en Sepolia y entender la diferencia entre ambos enfoques.
+- Pista A — `MinimalToken.sol`: implementación didáctica y minimalista.
+- Pista B — `OZToken.sol`: implementación basada en OpenZeppelin (recomendada para producción).
+
+En este README encontraras instrucciones actualizadas (en español) para usar Visual Studio Code y desplegar en la testnet Sepolia.
+
+## Resumen rápido (qué haremos)
+
+1. Configurar un archivo `.env` seguro con tu RPC de Alchemy/Infura y tu clave privada de Sepolia.
+2. Instalar dependencias y compilar con Hardhat.
+3. Desplegar el contrato (pista A o B) en Sepolia.
+4. Añadir el token a MetaMask y/ó enviar tokens (airdrop sencillo).
+
+---
 
 ## Requisitos
 
-- Node.js (>=16)
-- npm o pnpm
-- Cuenta con ETH en Sepolia (faucet) y un endpoint RPC (Infura/Alchemy) y clave privada para desplegar.
+- Node.js 16+ y `npm` (o `pnpm`).
+- Visual Studio Code (recomendado) con las extensiones: Solidity, ESLint, y Code Runner (opcional).
+- Cuenta con Sepolia ETH (faucet) y un endpoint RPC (por ejemplo, Alchemy). También necesitarás exportar la clave privada de la cuenta desde MetaMask para desplegar (¡nunca la compartas!).
 
-## Diferencia entre Goerli y Sepolia
+## Archivos importantes en este repo
 
-- Goerli fue una testnet muy usada pero ha ido siendo reemplazada; Sepolia es la testnet recomendada actualmente.
-- Costes: ambos usan tokens de test (faucets). Sepolia suele ser suficiente y soportado por servicios. Para minimizar coste real, usa testnet y faucets.
+- `contracts/MinimalToken.sol` — token minimal.
+- `contracts/OZToken.sol` — token basado en OpenZeppelin.
+- `scripts/deploy_minimal.js` — script de despliegue para `MinimalToken`.
+- `scripts/deploy_oz.js` — script de despliegue para `OZToken`.
+- `hardhat.config.js` — configuración de Hardhat. Toma `SEPOLIA_RPC` y `PRIVATE_KEY` desde `.env`.
+- `package.json` — comandos rápidos (`npm run compile`, `deploy-minimal`, `deploy-oz`).
 
-## Pasos (resumen)
+## 1) Preparar el entorno en VS Code
 
-1. Copia `.env.example` a `.env` y completa `SEPOLIA_RPC` y `PRIVATE_KEY`.
-2. Instala dependencias:
+1. Abre la carpeta del proyecto en VS Code: `File > Open Folder...` y selecciona la carpeta del repo.
+2. Instala estas extensiones (opcionales, pero útiles):
+	- Solidity (sintaxis, resaltado, snippets)
+	- ESLint
+	- Prettier (opcional)
+
+## 2) Variables de entorno (.env)
+
+1. Copia el archivo de ejemplo `.env.example` a `.env` en la raíz del proyecto:
+
+```powershell
+copy .env.example .env
+```
+
+2. Abre `.env` y rellena las variables:
+- `SEPOLIA_RPC` — tu HTTP RPC URL de Alchemy o Infura para Sepolia.
+- `PRIVATE_KEY` — la clave privada de la cuenta que pagará el gas (sin 0x o con 0x, Hardhat acepta ambos; en `hardhat.config.js` se usa tal cual).
+- `ETHERSCAN_API_KEY` — (opcional) para verificar contratos en Etherscan.
+
+IMPORTANTE: Nunca añadas tu `.env` al control de versiones (está en `.gitignore`).
+
+## 3) Instalar dependencias
+
+En una terminal integrada de VS Code (PowerShell en Windows):
 
 ```powershell
 npm install
 ```
 
-3. Compila los contratos:
+Esto instalará `hardhat`, `@openzeppelin/contracts`, `ethers` y otras dependencias listadas en `package.json`.
+
+## 4) Compilar contratos
 
 ```powershell
 npm run compile
 ```
 
-4. Despliega la pista A (minimal):
+Si hay errores de compilación, VS Code los mostrará en la pestaña "Problems"; corrígelos primero.
 
-```powershell
-npm run deploy-minimal
-```
+## 5) Desplegar a Sepolia
 
-5. Despliega la pista B (OpenZeppelin):
+Hay dos scripts preparados en `package.json`:
+
+- `npm run deploy-minimal` — despliega `MinimalToken`.
+- `npm run deploy-oz` — despliega `OZToken` (OpenZeppelin).
+
+Ejemplo (PowerShell):
 
 ```powershell
 npm run deploy-oz
 ```
 
-## Estructura principal
+Salida esperada: la dirección del contrato desplegado. Cópiala y pégala en https://sepolia.etherscan.io/ para inspeccionarla.
 
-- `contracts/MinimalToken.sol` - token didáctico (balance mapping, transfer).
-- `contracts/OZToken.sol` - token basado en OpenZeppelin ERC20 (approve/transferFrom incluidos).
-- `scripts/deploy_minimal.js` - despliegue de la pista A.
-- `scripts/deploy_oz.js` - despliegue de la pista B.
-- `hardhat.config.js` - configuración de Hardhat (red Sepolia desde `.env`).
+## 6) Añadir el token a MetaMask
+
+1. Abre MetaMask y selecciona la red Sepolia.
+2. Click en "Importar token" > "Token personalizado".
+3. Pega la dirección del contrato desplegado y MetaMask rellenará el símbolo (si está disponible).
+
+## 7) Enviar tokens / airdrop (sugerencia rápida)
+
+Opción sencilla: desde MetaMask (tras agregar el token) puedes enviar tokens a otra dirección como con cualquier ERC‑20.
+
+Opción por script: puedes crear un script en `scripts/airdrop.js` que use `ethers.getContractAt('OZToken', address)` y llame a `transfer(...)` en bucle. Si quieres, puedo añadir un ejemplo seguro y pequeño.
+
+## Notas sobre seguridad y buenas prácticas
+
+- Nunca subas tu clave privada a GitHub.
+- Para pruebas usa cuentas con fondos testnet únicamente.
+- Prefiere OpenZeppelin para tokens reales: reduce riesgos.
+
+---
+
+A continuacion hemos añadido un scrip airdrops para si queremos automatizar el envio de tokens.
+
 
 
