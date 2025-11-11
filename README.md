@@ -108,7 +108,13 @@ Opción por script: puedes crear un script en `scripts/airdrop.js` que use `ethe
 
 ---
 
-A continuacion hemos añadido un scrip airdrops para si queremos automatizar el envio de tokens.
+## Scripts útiles
 
+Además de los despliegues, hemos incluido dos scripts prácticos:
+
+- `scripts/inspect_token.js` — inspecciona un token desplegado (name, symbol, decimals, totalSupply, balance).
+- `scripts/airdrop.js` — hace un airdrop de tokens a múltiples direcciones desde un JSON.
+
+Úsalos para automatizar tareas comunes en el despliegue y distribución de tokens.
 
 
